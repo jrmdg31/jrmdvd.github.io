@@ -7,10 +7,10 @@ if(empty($_POST['name']) || empty($_POST['email']) || empty($_POST['subject']) |
 }
 
 // Sanitize input fields
-$name = strip_tags(htmlspecialchars($_POST['name']));
-$email = strip_tags(htmlspecialchars($_POST['email']));
-$subject = strip_tags(htmlspecialchars($_POST['subject']));
-$message = strip_tags(htmlspecialchars($_POST['message']));
+$name = filter_var($_POST['name'], FILTER_SANITIZE_STRING);
+$email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
+$subject = filter_var($_POST['subject'], FILTER_SANITIZE_STRING);
+$message = filter_var($_POST['message'], FILTER_SANITIZE_STRING);
 
 // Set up the email recipient, subject, and body
 $to = "davidjeromejerome351@gmail.com"; // Replace with your email address
@@ -27,6 +27,7 @@ if(mail($to, $email_subject, $email_body, $headers)) {
     echo "Your message has been sent. Thank you!";
 } else {
     http_response_code(500);
+    error_log("Failed to send email: $email_subject");
     echo "Oops! Something went wrong and we couldn't send your message.";
 }
 ?>
